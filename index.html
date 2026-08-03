@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>H3P — Happiness Project Path</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --orange: #F2762E;
+    --orange-deep: #D65A16;
+    --gold: #F7B733;
+    --coral: #F4776B;
+    --sage: #6E8F72;
+    --sage-deep: #4F6E54;
+    --cream: #FFF7EC;
+    --card: #FFFDF8;
+    --ink: #3B2A1E;
+    --ink-soft: #7A6A5B;
+    --white: #FFFFFF;
+    --parallax-x: 0px;
+    --parallax-y: 0px;
+    --scroll-progress: 0%;
+  }
+
+  *{margin:0; padding:0; box-sizing:border-box;}
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    line-height: 1.55;
+    overflow-x: hidden;
+  }
+
+  body::before{
+    content:'';
+    position:fixed;
+    top:0;
+    left:0;
+    width: var(--scroll-progress);
+    height: 3px;
+    background: linear-gradient(90deg, var(--orange), var(--gold));
+    z-index: 140;
+    pointer-events:none;
+    transition: width 0.1s linear;
+  }
+
+  @keyframes fadeInUp{
+    from{ opacity:0; transform: translateY(18px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+  @keyframes floatBlob{
+    from{ transform: translate(0,0); }
+    to{ transform: translate(-24px, 28px); }
+  }
+  @keyframes decorFloat{
+    from{ transform: translateY(0) rotate(var(--decor-rot, 0deg)); }
+    to{ transform: translateY(-10px) rotate(calc(var(--decor-rot, 0deg) + 1deg)); }
+  }
+  @keyframes tagPopIn{
+    from{ opacity:0; transform: translateY(14px) scale(0.96); }
+    to{ opacity:1; transform: translateY(0) scale(1); }
+  }
+  @keyframes ctaPulse{
+    0%, 100%{ transform: translateY(0) scale(1); }
+    50%{ transform: translateY(-1px) scale(1.02); }
+  }
+  @keyframes navLinkSlideIn{
+    from{ opacity: 0; transform: translateX(14px); }
+    to{ opacity: 1; transform: translateX(0); }
+  }
+  @keyframes navLinkSlideOut{
+    from{ opacity: 1; transform: translateX(0); }
+    to{ opacity: 0; transform: translateX(12px); }
+  }
+
+  .load-in{ opacity:0; animation: fadeInUp 0.8s ease forwards; }
+
+  .reveal{ opacity:0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.in-view{ opacity:1; transform: translateY(0); }
+  .pilares-grid .reveal:nth-child(2), .audience-grid .reveal:nth-child(2){ transition-delay: 0.1s; }
+  .pilares-grid .reveal:nth-child(3), .audience-grid .reveal:nth-child(3){ transition-delay: 0.2s; }
+  .pilares-grid .reveal:nth-child(4){ transition-delay: 0.3s; }
+  .ladder-track .reveal:nth-child(2){ transition-delay: 0.05s; }
+  .ladder-track .reveal:nth-child(3){ transition-delay: 0.1s; }
+  .ladder-track .reveal:nth-child(4){ transition-delay: 0.15s; }
+  .ladder-track .reveal:nth-child(5){ transition-delay: 0.2s; }
+
+  h1, h2, h3{
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  a{ color:inherit; text-decoration:none; }
+
+  .wrap{ max-width: 1180px; margin: 0 auto; padding: 0 2rem; position:relative; }
+
+  .eyebrow{
+    font-family: 'Caveat', cursive;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--orange-deep);
+    display:inline-block;
+    transform: rotate(-2deg);
+  }
+
+  /* NAV */
+  nav{
+    position: fixed; top:0; left:0; right:0; z-index:100;
+    padding: 1.3rem 0;
+    transition: background 0.3s ease, padding 0.3s ease, box-shadow 0.3s ease;
+  }
+  nav.scrolled{
+    background: rgba(255, 247, 236, 0.92);
+    backdrop-filter: blur(8px);
+    padding: 0.9rem 0;
+    box-shadow: 0 1px 0 rgba(59,42,30,0.08);
+  }
+  nav .wrap{ display:flex; align-items:center; justify-content:space-between; }
+  .logo{
+    font-family:'Bricolage Grotesque', sans-serif;
+    font-weight:700; font-size:1.35rem;
+    display:flex; align-items:center; gap:0.5rem;
+    transform-origin: left center;
+    transition: transform 0.28s ease, filter 0.28s ease;
+  }
+  .logo-dot{
+    width: 12px; height:12px; border-radius:50%;
+    background: var(--orange);
+    display:inline-block;
+    transition: transform 0.32s ease, box-shadow 0.32s ease;
+  }
+  .logo img{
+    display:block;
+    max-height: 38px;
+    width: auto;
+    transition: transform 0.28s ease, filter 0.28s ease;
+  }
+  nav.scrolled .logo{
+    transform: translateY(-1px) scale(0.985);
+    filter: saturate(1.05);
+  }
+  nav.scrolled .logo-dot{
+    transform: scale(1.08);
+    box-shadow: 0 0 0 4px rgba(242,118,46,0.18);
+  }
+  nav.scrolled .logo img{
+    transform: translateY(-1px) scale(0.99);
+  }
+  .logo .digit{ color: var(--orange); }
+  .nav-links{ display:flex; gap:1.9rem; align-items:center; font-size:0.92rem; font-weight:600; }
+  .nav-links a{ color: var(--ink-soft); transition: color 0.2s; }
+  .nav-links a:hover{ color: var(--orange-deep); }
+
+  .nav-toggle{
+    display:none;
+    width: 40px; height: 40px;
+    border: none; background: transparent;
+    cursor: pointer;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+  .nav-toggle span{
+    width: 22px; height: 2px; background: var(--ink);
+    border-radius: 2px;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+  }
+  .nav-toggle.open span:nth-child(1){ transform: translateY(7px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2){ opacity: 0; }
+  .nav-toggle.open span:nth-child(3){ transform: translateY(-7px) rotate(-45deg); }
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:0.5rem;
+    padding: 0.85rem 1.6rem; border-radius: 100px;
+    font-weight: 700; font-size: 0.92rem; border:none; cursor:pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+  .btn-primary{
+    background: var(--orange); color: var(--white);
+    box-shadow: 0 6px 16px rgba(242,118,46,0.38);
+  }
+  .btn-primary:hover{ background: var(--orange-deep); transform: translateY(-2px) rotate(-0.5deg); }
+  .cta-pulse{ animation: ctaPulse 3.8s ease-in-out infinite; }
+  .cta-pulse:hover{ animation-play-state: paused; }
+  .hero-actions .cta-pulse{ animation-delay: 0.4s; }
+  .ladder-level.popular .cta-pulse{ animation-delay: 1.1s; }
+  .cta-banner .cta-pulse{ animation-delay: 1.7s; }
+  .btn-ghost{
+    background: transparent; color: var(--ink); border: 2px solid var(--ink);
+  }
+  .btn-ghost:hover{ background: var(--ink); color: var(--cream); }
+  .nav-cta{ font-size:0.85rem; padding: 0.7rem 1.35rem; }
+
+  /* HERO */
+  header.hero{ position:relative; padding: 9rem 0 5rem; overflow:hidden; }
+  .hero-blob{
+    position:absolute; width: 480px; height:480px; border-radius:50%;
+    background: radial-gradient(circle, rgba(247,183,51,0.55), transparent 70%);
+    top: -180px; right: -160px; z-index:0; filter: blur(6px);
+    animation: floatBlob 9s ease-in-out infinite alternate;
+  }
+  .hero-grid{ position:relative; z-index:1; display:grid; grid-template-columns: 1.1fr 0.9fr; gap: 3rem; align-items:center; }
+  .hero h1{ font-size: clamp(2.3rem, 4.4vw, 3.5rem); line-height:1.08; margin: 1.1rem 0 1.4rem; }
+  .hero h1 .hl{ color: var(--orange); }
+  .hero p.lead{ font-size: 1.12rem; color: var(--ink-soft); max-width: 48ch; margin-bottom: 2.1rem; }
+  .hero p.lead strong{ color: var(--ink); }
+  .hero-actions{ display:flex; gap:1rem; flex-wrap:wrap; margin-bottom: 2.6rem; }
+
+  .hero-collage{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1.1fr 0.9fr;
+    gap: 0.9rem;
+    position: relative;
+  }
+  .photo-block{
+    border-radius: 20px;
+    position: relative;
+    overflow:hidden;
+    min-height: 140px;
+  }
+  .photo-block.p1{ grid-row: span 2; }
+  .photo-block img{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+  .photo-block:hover img{ transform: scale(1.06); }
+  .photo-block::after{
+    content:'';
+    position:absolute; inset:0;
+    background: linear-gradient(180deg, transparent 55%, rgba(30,20,10,0.55) 100%);
+  }
+  .photo-caption{
+    position:absolute; left: 14px; bottom: 14px; z-index: 2;
+    display:flex; align-items:center; gap: 0.55rem;
+  }
+  .caption-icon{
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--orange);
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .caption-text{
+    font-size: 0.78rem; color: #fff; font-weight: 600;
+  }
+
+  /* HERO VIDEO + BACKGROUND COLLAGE */
+  .hero-video-wrap{ position:relative; padding: 2.2rem 1.6rem; }
+  .bg-photo{
+    position:absolute; border-radius: 18px; overflow:hidden;
+    box-shadow: 0 16px 34px rgba(59,42,30,0.22);
+    z-index: 1;
+  }
+  .bg-photo img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .bg-photo.chip-1{ top: 0; right: 0; width: 58%; aspect-ratio: 4/3; transform: translate(calc(var(--parallax-x) * 0.55), calc(var(--parallax-y) * 0.55)) rotate(5deg); }
+  .bg-photo.chip-2{ bottom: 0; left: 0; width: 52%; aspect-ratio: 4/3; transform: translate(calc(var(--parallax-x) * -0.45), calc(var(--parallax-y) * -0.45)) rotate(-6deg); }
+
+  .video-frame{
+    position: relative; z-index: 2;
+    width: 82%; margin: 0 auto;
+    aspect-ratio: 4/5;
+    border-radius: 22px;
+    overflow:hidden;
+    box-shadow: 0 26px 50px rgba(59,42,30,0.32);
+    border: 4px solid var(--card);
+  }
+  .video-frame .poster{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+  }
+  .video-frame::after{
+    content:'';
+    position:absolute; inset:0;
+    background: linear-gradient(180deg, rgba(30,20,10,0.15) 0%, rgba(30,20,10,0.6) 100%);
+  }
+  .video-play{
+    position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 78px; height: 78px; border-radius: 50%;
+    background: rgba(255,255,255,0.95);
+    display:flex; align-items:center; justify-content:center;
+    z-index: 3; cursor:pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  }
+  .video-play:hover{ transform: translate(-50%, -50%) scale(1.08); background: var(--white); }
+  .video-caption{
+    position:absolute; left: 14px; right: 14px; bottom: 14px; z-index: 3;
+    display:flex; align-items:center; gap: 0.7rem;
+  }
+  .video-caption .avatar-dot{
+    width: 34px; height: 34px; border-radius:50%; flex-shrink:0;
+    background: linear-gradient(135deg, var(--orange), var(--gold));
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Bricolage Grotesque'; font-weight:700; font-size: 0.8rem; color: var(--white);
+  }
+  .video-caption .vc-text{ color: #fff; }
+  .video-caption .vc-name{ font-size: 0.86rem; font-weight:700; display:block; line-height:1.2; }
+  .video-caption .vc-role{ font-size: 0.74rem; color: rgba(255,255,255,0.8); }
+  .hero-video-wrap{ transform: translate(calc(var(--parallax-x) * 0.22), calc(var(--parallax-y) * 0.22)); }
+
+  /* Decorative background photos, anchored just outside .wrap's edge so they stay close to the content on any screen width */
+  .decor-photo{
+    position:absolute; z-index:0; pointer-events:none;
+    border-radius:18px; overflow:hidden;
+    box-shadow: 0 16px 34px rgba(59,42,30,0.18);
+    opacity:0.92;
+    display:none;
+    animation: decorFloat 7.2s ease-in-out infinite alternate;
+    transform-origin: center;
+  }
+  .decor-photo img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+  @media (min-width: 1440px){
+    .decor-photo{ display:block; }
+  }
+
+  @media (max-width: 1439px){
+    .decor-photo{
+      display:block;
+      position:relative;
+      left:auto !important;
+      right:auto !important;
+      top:auto !important;
+      bottom:auto !important;
+      transform:none !important;
+      width:min(42vw, 160px) !important;
+      aspect-ratio: 4/3;
+      margin: 0 auto 0.85rem;
+      opacity:0.95;
+    }
+    .wrap > .decor-photo + .decor-photo{ margin-top: 0.6rem; }
+    #problema .decor-photo,
+    #journey .decor-photo{ width:min(36vw, 132px) !important; }
+  }
+
+  .decor-photo.decor-tl{ --decor-rot:-7deg; left: -104px; top: 1.6rem; width: 104px; aspect-ratio: 4/5; transform: rotate(-7deg); animation-delay: -0.6s; }
+  .decor-photo.decor-tr{ --decor-rot:7deg; right: -104px; top: 1.6rem; width: 104px; aspect-ratio: 4/5; transform: rotate(7deg); animation-delay: -1.4s; }
+  .decor-photo.decor-bl{ --decor-rot:6deg; left: -110px; bottom: 1.6rem; width: 110px; aspect-ratio: 3/4; transform: rotate(6deg); animation-delay: -1s; }
+  .decor-photo.decor-br{ --decor-rot:-6deg; right: -110px; bottom: 1.6rem; width: 110px; aspect-ratio: 3/4; transform: rotate(-6deg); animation-delay: -2.1s; }
+  .decor-photo.decor-mid-l{ --decor-rot:-5deg; left: -100px; top: 50%; width: 100px; aspect-ratio: 1/1; transform: translateY(-50%) rotate(-5deg); animation-delay: -0.8s; }
+  .decor-photo.decor-mid-r{ --decor-rot:5deg; right: -100px; top: 50%; width: 100px; aspect-ratio: 1/1; transform: translateY(-50%) rotate(5deg); animation-delay: -1.8s; }
+
+  /* Make the "por que somos diferentes" decorative image closer and slightly larger */
+  #diferentes .decor-photo.decor-mid-r{ right: -62px; width: 132px; }
+
+  @media (min-width: 1700px){
+    .decor-photo.decor-tl, .decor-photo.decor-tr{ width: 132px; }
+    .decor-photo.decor-bl, .decor-photo.decor-br{ width: 138px; }
+    .decor-photo.decor-mid-l, .decor-photo.decor-mid-r{ width: 122px; }
+    #diferentes .decor-photo.decor-mid-r{ right: -48px; width: 154px; }
+  }
+
+  section{
+    padding: 5.5rem 0;
+    position:relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  section::before{
+    content:'';
+    position:absolute;
+    inset: 8% 6%;
+    border-radius: 28px;
+    background: radial-gradient(circle at 20% 20%, rgba(247,183,51,0.14), rgba(242,118,46,0.07) 45%, transparent 72%);
+    opacity: 0;
+    transform: scale(1.06);
+    transition: opacity 0.75s ease, transform 0.75s ease;
+    z-index: -1;
+    pointer-events:none;
+  }
+  section.section-active::before{
+    opacity: 1;
+    transform: scale(1);
+  }
+  .section-head{ max-width: 680px; margin-bottom: 2.6rem; }
+  .section-head h2{ font-size: clamp(1.75rem, 3vw, 2.4rem); margin-top: 0.9rem; line-height:1.15; }
+  .section-head p{ color: var(--ink-soft); margin-top: 0.8rem; font-size: 1.02rem; }
+
+  /* FEATURE BLOCK (dark sage full-bleed card) */
+  .feature-block{ background: var(--sage-deep); color: var(--cream); border-radius: 28px; margin: 0 2rem; padding: 3.5rem 3rem; }
+  .feature-block .wrap{ padding: 0; max-width: none; }
+  .feature-block .eyebrow{ color: var(--gold); }
+  .feature-block h2{ color: var(--white); max-width: 20ch; }
+  .feature-block p{ color: rgba(255,247,236,0.85); font-size: 1.05rem; max-width: 68ch; margin-top: 1.2rem; }
+  .feature-block p.tight{ margin-top: 0.6rem; }
+
+  /* ANTES / DESPUÉS */
+  .transform-grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .transform-col{ border-radius: 20px; padding: 2.2rem 2rem; }
+  .transform-col.antes{ background: rgba(59,42,30,0.06); border: 1px dashed rgba(59,42,30,0.25); }
+  .transform-col.despues{ background: var(--card); border: 1px solid var(--orange); box-shadow: 0 14px 30px rgba(242,118,46,0.14); }
+  .transform-col .tag{ font-size: 0.75rem; text-transform:uppercase; letter-spacing:0.08em; font-weight:700; margin-bottom: 1rem; display:inline-block; }
+  .transform-col.antes .tag{ color: var(--ink-soft); }
+  .transform-col.despues .tag{ color: var(--orange-deep); }
+  .transform-col ul{ list-style:none; padding:0; margin-top: 1.2rem; display:flex; flex-direction:column; gap: 0.7rem; }
+  .transform-col li{ font-size: 0.95rem; display:flex; align-items:flex-start; gap: 0.6rem; }
+  .transform-col.antes li{ color: var(--ink-soft); }
+  .transform-col.despues li{ color: var(--ink); font-weight: 500; }
+  .transform-col.antes li::before{ content:'—'; color: var(--ink-soft); flex-shrink:0; }
+  .transform-col.despues li::before{ content:'✓'; color: var(--orange); font-weight:700; flex-shrink:0; }
+  .transform-arrow{ display:flex; align-items:center; justify-content:center; }
+
+  /* PROPUESTA CALLOUT */
+  .propuesta-callout{
+    background: var(--card); border: 2px dashed var(--orange-deep); border-radius: 20px;
+    padding: 1.8rem 2rem; margin: 1.8rem 0 2rem; display:flex; align-items:center; gap: 1.4rem; flex-wrap:wrap;
+  }
+  .propuesta-callout .acronym{
+    font-family:'Bricolage Grotesque';
+    font-weight:700;
+    font-size: 1.9rem;
+    color: var(--orange-deep);
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.12;
+    max-width: 100%;
+  }
+  .propuesta-callout .meaning{ font-family:'Caveat'; font-size: 1.4rem; color: var(--ink-soft); transform: rotate(-1deg); }
+
+  /* METHOD TAGS */
+  .method-tags{ display:flex; flex-wrap:wrap; gap: 0.7rem; margin-top: 1.8rem; }
+  .method-tag{
+    background: var(--card); border: 1px solid rgba(59,42,30,0.15);
+    padding: 0.6rem 1.15rem; border-radius: 100px; font-size: 0.88rem; font-weight: 600; color: var(--ink);
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+  }
+  .method-tag:hover{ transform: translateY(-2px); box-shadow: 0 8px 14px rgba(59,42,30,0.1); }
+  .method-tags.in-view .method-tag{ opacity:0; animation: tagPopIn 0.5s ease forwards; }
+  .method-tags.in-view .method-tag:nth-child(1){ animation-delay: 0.02s; }
+  .method-tags.in-view .method-tag:nth-child(2){ animation-delay: 0.08s; }
+  .method-tags.in-view .method-tag:nth-child(3){ animation-delay: 0.14s; }
+  .method-tags.in-view .method-tag:nth-child(4){ animation-delay: 0.2s; }
+  .method-tags.in-view .method-tag:nth-child(5){ animation-delay: 0.26s; }
+  .method-tags.in-view .method-tag:nth-child(6){ animation-delay: 0.32s; }
+  .method-tags.in-view .method-tag:nth-child(7){ animation-delay: 0.38s; }
+
+  /* PILARES */
+  .pilares-grid{ display:grid; grid-template-columns: repeat(4, 1fr); gap: 1.3rem; }
+  .pilar-card{
+    background: var(--card); border-radius: 18px; padding: 1.9rem 1.6rem;
+    border-top: 4px solid var(--accent);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .pilar-card:hover{ transform: translateY(-4px); box-shadow: 0 14px 28px rgba(59,42,30,0.09); }
+  .pilar-icon{
+    width: 42px; height:42px; border-radius: 12px;
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom: 1rem;
+  }
+  .pilar-card:nth-child(1) .pilar-icon{ background: rgba(242,118,46,0.15); }
+  .pilar-card:nth-child(2) .pilar-icon{ background: rgba(247,183,51,0.2); }
+  .pilar-card:nth-child(3) .pilar-icon{ background: rgba(244,119,107,0.16); }
+  .pilar-card:nth-child(4) .pilar-icon{ background: rgba(110,143,114,0.16); }
+  .pilar-card:nth-child(1){ --accent: var(--orange); }
+  .pilar-card:nth-child(2){ --accent: var(--gold); }
+  .pilar-card:nth-child(3){ --accent: var(--coral); }
+  .pilar-card:nth-child(4){ --accent: var(--sage); }
+  .pilar-card .pilar-word{ font-family:'Bricolage Grotesque'; font-weight:700; font-size: 1.5rem; color: var(--accent); }
+  .pilar-card h4{ font-size: 0.98rem; margin: 0.6rem 0 0.5rem; }
+  .pilar-card p{ font-size: 0.87rem; color: var(--ink-soft); }
+
+  /* EMPRESAS */
+  .empresas-grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items:center; }
+  .empresas-photo{ border-radius: 20px; overflow:hidden; box-shadow: 0 20px 40px rgba(59,42,30,0.14); aspect-ratio: 4/3; }
+  .empresas-photo img{ width:100%; height:100%; object-fit:cover; }
+  .empresas-note{ font-size: 0.85rem; color: var(--ink-soft); font-style: italic; margin-top: 1rem; max-width: 62ch; }
+
+  /* CHECKLIST */
+  .checklist-grid{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 0.9rem 2rem; margin-top: 1.6rem; }
+  .checklist-item{ display:flex; align-items:flex-start; gap: 0.7rem; font-size: 0.95rem; }
+  .checklist-item .check{
+    width: 22px; height: 22px; border-radius: 50%; background: var(--orange);
+    flex-shrink:0; display:flex; align-items:center; justify-content:center; margin-top: 2px;
+  }
+  .checklist-item .check svg{ width: 11px; height: 11px; }
+  .como-foot{ font-family:'Caveat'; font-size: 1.3rem; color: var(--orange-deep); margin-top: 1.6rem; display:inline-block; transform: rotate(-1.5deg); }
+
+  /* AUDIENCE / TESTIMONIAL-STYLE GRID */
+  .audience-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+  .audience-card{
+    background: var(--card); border-radius: 20px; padding: 1.9rem 1.6rem;
+    border: 1px solid rgba(59,42,30,0.08);
+  }
+  .audience-icon{
+    width: 52px; height:52px; border-radius:50%;
+    margin-bottom: 1.1rem;
+    overflow:hidden;
+  }
+  .audience-icon img{ width:100%; height:100%; object-fit:cover; }
+  .audience-card:nth-child(3) .audience-icon{ background: linear-gradient(135deg, var(--sage), #8FAE8F); }
+  .audience-card h3{ font-size: 1.1rem; margin-bottom: 0.5rem; }
+  .audience-card p{ font-size: 0.92rem; color: var(--ink-soft); }
+
+  /* FOUNDER */
+  .founder-card{
+    display:grid; grid-template-columns: 200px 1fr; gap: 2.2rem; align-items:center;
+    background: var(--card); border-radius: 24px; padding: 2.3rem;
+    border: 1px solid rgba(59,42,30,0.08);
+  }
+  .founder-avatar{
+    width: 180px; height: 180px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--orange), var(--gold));
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Bricolage Grotesque'; font-weight:700; font-size: 2.8rem; color: var(--white);
+    flex-shrink:0;
+  }
+  .founder-card .role{ font-family:'Caveat'; font-size: 1.25rem; color: var(--orange-deep); display:block; margin-bottom: 0.5rem; }
+  .founder-card h3{ font-size: 1.4rem; }
+  .founder-credentials{ list-style:none; display:flex; flex-wrap:wrap; gap: 0.5rem 0.8rem; margin: 0.9rem 0 1.1rem; padding:0; }
+  .founder-credentials li{
+    font-size: 0.8rem; background: var(--cream); border: 1px solid rgba(59,42,30,0.12);
+    padding: 0.35rem 0.85rem; border-radius: 100px; color: var(--ink-soft);
+  }
+  .founder-card p.bio{ font-size: 0.95rem; color: var(--ink-soft); }
+
+  /* JOURNEY / VALUE LADDER */
+  .ladder-track{ position:relative; padding-left: 56px; }
+  .ladder-line{
+    position:absolute; left: 23px; top: 8px; bottom: 8px; width: 2px;
+    background: repeating-linear-gradient(180deg, var(--orange) 0 8px, transparent 8px 16px);
+  }
+  .ladder-level{ position:relative; margin-bottom: 2.2rem; }
+  .ladder-level:last-child{ margin-bottom: 0; }
+  .ladder-marker{
+    position:absolute; left: -56px; top: 0; width: 48px; height: 48px; border-radius: 50%;
+    background: var(--card); border: 3px solid var(--orange);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Caveat'; font-weight:700; font-size: 1.35rem; color: var(--orange-deep);
+    z-index: 2;
+  }
+  .ladder-level.tier-5 .ladder-marker{ border-color: var(--sage-deep); color: var(--sage-deep); background: var(--card); }
+  .ladder-card{ background: var(--card); border-radius: 20px; padding: 2rem 2.1rem; border: 1px solid rgba(59,42,30,0.08); }
+  .ladder-level.tier-5 .ladder-card{ background: var(--sage-deep); color: var(--cream); border-color: transparent; }
+  .ladder-level.tier-5 .ladder-card h3{ color: var(--white); }
+  .ladder-level.tier-5 .ladder-card p, .ladder-level.tier-5 .ladder-card li{ color: rgba(255,247,236,0.85); }
+  .ladder-level.popular .ladder-card{ border: 2px solid var(--orange); box-shadow: 0 18px 36px rgba(242,118,46,0.2); }
+  .ladder-level.popular .ladder-marker{ background: var(--orange); color: var(--white); }
+  .popular-badge{
+    position:absolute; top: -14px; right: 1.8rem;
+    background: var(--orange); color: var(--white);
+    font-size: 0.72rem; font-weight:700; letter-spacing:0.04em; text-transform:uppercase;
+    padding: 0.35rem 0.9rem; border-radius: 100px;
+    box-shadow: 0 6px 14px rgba(242,118,46,0.4);
+  }
+  .ladder-cta{ margin-top: 1.2rem; display:inline-flex; }
+  .ladder-head{ display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap: 1rem; margin-bottom: 0.9rem; }
+  .ladder-kicker{ font-size: 0.72rem; letter-spacing: 0.08em; text-transform:uppercase; font-weight:700; color: var(--orange-deep); }
+  .ladder-level.tier-5 .ladder-kicker{ color: var(--gold); }
+  .ladder-card h3{ font-size: 1.3rem; margin-top: 0.3rem; }
+  .ladder-price{
+    background: var(--cream); border-radius: 100px; padding: 0.5rem 1.1rem;
+    font-weight: 700; font-size: 0.9rem; color: var(--orange-deep); white-space:nowrap; height: fit-content;
+  }
+  .ladder-level.tier-5 .ladder-price{ background: rgba(255,255,255,0.14); color: var(--white); }
+  .ladder-meta{ font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 0.9rem; }
+  .ladder-level.tier-5 .ladder-meta{ color: rgba(255,247,236,0.72); }
+  .ladder-intro{ font-size: 0.92rem; margin-bottom: 1rem; }
+  .ladder-includes{ list-style:none; padding:0; margin: 0.6rem 0 1rem; display:grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem 1.5rem; }
+  .ladder-includes li{ font-size: 0.87rem; display:flex; gap: 0.5rem; align-items:flex-start; }
+  .ladder-includes li::before{ content:'✓'; color: var(--orange); font-weight:700; flex-shrink:0; }
+  .ladder-level.tier-5 .ladder-includes li::before{ color: var(--gold); }
+  .ladder-result{ font-family:'Caveat'; font-size: 1.2rem; color: var(--orange-deep); margin-top: 0.7rem; display:inline-block; }
+  .ladder-level.tier-5 .ladder-result{ color: var(--gold); }
+
+  /* CTA */
+  .cta-banner{
+    background: linear-gradient(120deg, var(--orange) 0%, var(--gold) 100%);
+    border-radius: 28px; padding: 3.6rem 3rem;
+    display:flex; flex-direction:column; align-items:center; text-align:center; gap:1.6rem;
+    color: var(--white);
+  }
+  .cta-banner .eyebrow{ color: rgba(255,255,255,0.85); }
+  .cta-banner h2{ color: var(--white); font-size: clamp(1.6rem, 3.4vw, 2.4rem); max-width: 22ch; }
+  .cta-banner p.question{ max-width: 52ch; font-size: 1.05rem; color: rgba(255,255,255,0.92); }
+  .cta-banner .cta-actions{ display:flex; gap: 1rem; flex-wrap:wrap; justify-content:center; }
+  .cta-banner .btn-primary{ background: var(--white); color: var(--orange-deep); box-shadow:none; }
+  .cta-banner .btn-primary:hover{ background: var(--cream); }
+  .cta-banner .btn-ghost{ border-color: rgba(255,255,255,0.6); color: var(--white); }
+  .cta-banner .btn-ghost:hover{ background: rgba(255,255,255,0.15); color: var(--white); }
+
+  footer{ padding: 3.5rem 0 2.2rem; }
+  .footer-grid{ display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:2rem; margin-bottom: 2.2rem; }
+  .footer-cols{ display:flex; gap: 3.2rem; }
+  .footer-col h4{ font-size: 0.78rem; text-transform:uppercase; letter-spacing:0.07em; color: var(--ink-soft); margin-bottom:0.85rem; }
+  .footer-col a, .footer-col p{ display:block; font-size: 0.9rem; color: var(--ink); margin-bottom:0.5rem; }
+  .footer-col a:hover{ color: var(--orange-deep); }
+  .footer-bottom{ font-size: 0.8rem; color: var(--ink-soft); display:flex; justify-content:space-between; flex-wrap:wrap; gap:1rem; padding-top: 1.6rem; border-top: 1px dashed rgba(59,42,30,0.18); }
+
+  @media (max-width: 900px){
+    .hero-grid{ grid-template-columns: 1fr; }
+    .transform-grid{ grid-template-columns: 1fr; }
+    .empresas-grid{ grid-template-columns: 1fr; }
+    .empresas-grid .empresas-photo{ order: -1; }
+    .pilares-grid{ grid-template-columns: repeat(2, 1fr); }
+    .audience-grid{ grid-template-columns: 1fr; }
+    .founder-card{ grid-template-columns: 1fr; text-align:center; justify-items:center; }
+    .founder-credentials{ justify-content:center; }
+    .checklist-grid{ grid-template-columns: 1fr; }
+    .ladder-includes{ grid-template-columns: 1fr; }
+    .nav-toggle{ display:flex; }
+    .nav-links{
+      position: fixed; top: 0; right: 0;
+      height: 100vh; width: min(78vw, 320px);
+      background: var(--cream);
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 1.6rem;
+      padding: 6rem 2rem 2rem;
+      box-shadow: -12px 0 30px rgba(59,42,30,0.12);
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      z-index: 90;
+      overflow-y:auto;
+    }
+    .nav-links.open{ transform: translateX(0); }
+    .nav-links a{
+      opacity: 0;
+      transform: translateX(14px);
+    }
+    .nav-links.open a{
+      animation: navLinkSlideIn 0.38s ease forwards;
+    }
+    .nav-links.open a:nth-child(1){ animation-delay: 0.05s; }
+    .nav-links.open a:nth-child(2){ animation-delay: 0.1s; }
+    .nav-links.open a:nth-child(3){ animation-delay: 0.15s; }
+    .nav-links.open a:nth-child(4){ animation-delay: 0.2s; }
+    .nav-links.open a:nth-child(5){ animation-delay: 0.25s; }
+    .nav-links.closing a{
+      animation: navLinkSlideOut 0.22s ease forwards;
+    }
+    .nav-links.closing a:nth-child(1){ animation-delay: 0.12s; }
+    .nav-links.closing a:nth-child(2){ animation-delay: 0.09s; }
+    .nav-links.closing a:nth-child(3){ animation-delay: 0.06s; }
+    .nav-links.closing a:nth-child(4){ animation-delay: 0.03s; }
+    .nav-links.closing a:nth-child(5){ animation-delay: 0s; }
+    .nav-links a{ font-size: 1.05rem; }
+    .nav-links .nav-cta{ width: 100%; }
+    .nav-scrim{
+      display:block;
+      position: fixed; inset:0; background: rgba(20,14,8,0.35); z-index: 80;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s ease, visibility 0s linear 0.25s;
+    }
+    .nav-scrim.open{
+      opacity: 1;
+      visibility: visible;
+      transition-delay: 0s;
+    }
+    .feature-block{ margin: 0 1rem; padding: 2.5rem 1.6rem; }
+    .propuesta-callout .acronym{ font-size: 1.55rem; }
+    .decor-photo{ width:min(52vw, 180px) !important; }
+    .wrap > .decor-photo + .decor-photo{ display:none; }
+  }
+
+  @media (max-width: 560px){
+    .wrap{ padding: 0 1.25rem; }
+    header.hero{ padding: 7.5rem 0 3.5rem; }
+    section{ padding: 3.8rem 0; }
+    .hero-video-wrap{ padding: 1.2rem 0.8rem; }
+    .video-frame{ width: 88%; }
+    .bg-photo.chip-1{ width: 46%; }
+    .bg-photo.chip-2{ width: 42%; }
+    .hero-actions{ flex-direction:column; align-items:stretch; }
+    .hero-actions .btn{ width:100%; }
+    .pilares-grid{ grid-template-columns: 1fr; }
+    .footer-cols{ gap: 1.8rem; flex-wrap: wrap; }
+    .footer-grid{ flex-direction: column; }
+    .cta-banner .cta-actions{ flex-direction:column; width:100%; }
+    .cta-banner .btn{ width:100%; }
+    .feature-block{ margin: 0 0.75rem; }
+    .ladder-track{ padding-left: 42px; }
+    .ladder-marker{ left: -42px; width: 38px; height: 38px; font-size: 1.05rem; }
+    .ladder-line{ left: 18px; }
+    body::before{ height: 2px; }
+  }
+
+  .hero-video{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .video-play{
+    border: none;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; scroll-behavior:auto !important; animation:none !important; }
+    .reveal{ opacity:1 !important; transform:none !important; }
+    .load-in{ opacity:1 !important; }
+    body::before{ transition:none !important; }
+    section::before{ opacity: 0 !important; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="mainNav">
+  <div class="wrap">
+    <div class="logo"><span class="logo-dot"></span> h<span class="digit">3</span>p</div>
+    <div class="nav-links" id="navLinks">
+      <a href="#problema">El problema</a>
+      <a href="#pilares">Pilares</a>
+      <a href="#journey">Journey</a>
+      <a href="#fundador">Fundador</a>
+      <a href="#contacto" class="btn btn-primary nav-cta">Agenda una llamada</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="nav-scrim" id="navScrim"></div>
+
+<header class="hero">
+  <div class="hero-blob"></div>
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow load-in" style="animation-delay:0.05s">H3P — Happiness Project Personal Path</span>
+      <h1 class="load-in" style="animation-delay:0.15s">La felicidad no se encuentra. <span class="hl">Se construye.</span></h1>
+      <p class="lead load-in" style="animation-delay:0.28s"><strong>Construye una vida con más claridad, bienestar y dirección.</strong> En H3P ayudamos a profesionales y organizaciones a dejar de vivir en automático y empezar a diseñar un bienestar sostenible, combinando la Ciencia de la Felicidad con metodologías de innovación utilizadas por las empresas más exitosas del mundo.</p>
+      <div class="hero-actions load-in" style="animation-delay:0.4s">
+        <a href="#contacto" class="btn btn-primary cta-pulse">Agenda una llamada</a>
+        <a href="#propuesta" class="btn btn-ghost">Descubre H3P</a>
+      </div>
+    </div>
+
+    <div class="load-in" style="position:relative; animation-delay:0.3s">
+      <div class="hero-video-wrap">
+        <div class="bg-photo chip-1">
+          <img src="assets/team-session.png" alt="Equipo colaborando y sonriendo en una sesión de trabajo">
+        </div>
+        <div class="bg-photo chip-2">
+          <img src="assets/familia-feliz.png" alt="Familia sonriendo junta en casa">
+        </div>
+
+        <div class="video-frame">
+           <video id="heroVideo" class="hero-video" preload="metadata">
+             <source src="assets/ronald-presentacion.mp4" type="video/mp4">
+             Tu navegador no soporta video HTML5.
+           </video>
+
+           <button class="video-play" id="heroVideoPlay" aria-label="Reproducir video">
+             <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+               <path d="M8 5v14l11-7L8 5z" fill="#D65A16"/>
+             </svg>
+           </button>
+
+           <div class="video-caption">
+            <span class="avatar-dot">RB</span>
+            <span class="vc-text">
+              <span class="vc-name">Ronald Beltrán</span>
+              <span class="vc-role">Fundador de H3P · te lo cuenta en 2 min</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="problema">
+  <div class="wrap">
+    <div class="decor-photo decor-tl"><img src="assets/familia-feliz.png" alt=""></div>
+    <div class="decor-photo decor-br"><img src="assets/team-session.png" alt=""></div>
+    <div class="feature-block reveal">
+      <span class="eyebrow">el problema</span>
+      <h2>Aprendimos a construir carreras. Pero casi nadie nos enseñó a construir bienestar.</h2>
+      <p>Vivimos en una época donde las personas tienen más herramientas, más información y más oportunidades que nunca. Sin embargo, el agotamiento, el estrés y la desconexión siguen creciendo.</p>
+      <p class="tight">Muchos profesionales logran resultados extraordinarios en su trabajo, pero sienten que algo falta. No porque sean débiles. Sino porque nadie les enseñó a diseñar conscientemente una vida que también les haga bien.</p>
+    </div>
+  </div>
+</section>
+
+<section id="transformacion">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">la transformación</span>
+      <h2>De vivir en automático a diseñar tu vida a propósito.</h2>
+    </div>
+    <div class="transform-grid">
+      <div class="transform-col antes reveal">
+        <span class="tag">Antes</span>
+        <h3>Piloto automático</h3>
+        <ul>
+          <li>Resultados en el trabajo, vacío por dentro</li>
+          <li>Agotamiento que se acumula sin nombre</li>
+          <li>Bienestar como una idea vaga, no un plan</li>
+          <li>Motivación que dura un fin de semana</li>
+        </ul>
+      </div>
+      <div class="transform-col despues reveal">
+        <span class="tag">Con H3P</span>
+        <h3>Un sistema que se sostiene</h3>
+        <ul>
+          <li>Una definición operativa de tu propia felicidad</li>
+          <li>Experimentos y hábitos que sí se sostienen</li>
+          <li>Métricas de progreso, no solo intenciones</li>
+          <li>Un proyecto de vida con objetivos claros</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="propuesta">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">nuestra propuesta</span>
+      <h2>La ciencia explica el bienestar. Nosotros te ayudamos a convertirlo en un proyecto.</h2>
+      <p>H3P significa <strong>Happiness Presonal Project Path</strong>. No es un curso de motivación. Es un sistema práctico que transforma la Ciencia de la Felicidad en un proyecto personal con objetivos, herramientas, experimentos y resultados medibles.</p>
+    </div>
+    <div class="propuesta-callout reveal">
+      <span class="acronym">H3P = Happiness Presonal Project Path</span>
+      <span class="meaning">porque una vida extraordinaria no ocurre por accidente — se diseña</span>
+    </div>
+  </div>
+</section>
+
+<section id="diferentes">
+  <div class="wrap">
+    <div class="decor-photo decor-mid-r"><img src="assets/Team-laboratorio.png" alt=""></div>
+    <div class="section-head reveal">
+      <span class="eyebrow">por qué somos diferentes</span>
+      <h2>Donde la psicología positiva se encuentra con la innovación.</h2>
+      <p>Mientras la mayoría de programas enseñan únicamente conceptos sobre bienestar, H3P incorpora metodologías utilizadas durante años para diseñar productos, empresas y procesos de innovación — para ayudar a las personas a construir cambios sostenibles.</p>
+    </div>
+    <div class="method-tags reveal">
+      <span class="method-tag">Positive Psychology</span>
+      <span class="method-tag">Design Thinking</span>
+      <span class="method-tag">Lean Startup</span>
+      <span class="method-tag">Agile</span>
+      <span class="method-tag">SAFe</span>
+      <span class="method-tag">Behavioral Design</span>
+      <span class="method-tag">Design Sprints</span>
+    </div>
+  </div>
+</section>
+
+<section id="pilares">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">los 4 pilares</span>
+      <h2>Un marco simple para construir bienestar real.</h2>
+    </div>
+    <div class="pilares-grid">
+      <div class="pilar-card reveal">
+        <div class="pilar-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 20s-7-4.4-9.5-8.6C.8 8 2.4 4.5 5.8 4c2-.3 3.8.7 4.9 2.3C11.8 4.7 13.6 3.7 15.6 4c3.4.5 5 4 3.3 7.4C16.4 15.6 12 20 12 20z" stroke="#D65A16" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+        <span class="pilar-word">Happiness</span>
+        <h4>Comprender la ciencia del bienestar humano</h4>
+        <p>Aprender qué dice la evidencia sobre felicidad, resiliencia, energía y desempeño.</p>
+      </div>
+      <div class="pilar-card reveal">
+        <div class="pilar-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" stroke="#B87F13" stroke-width="1.6"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21" stroke="#B87F13" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+        <span class="pilar-word">Personal</span>
+        <h4>Mirar hacia adentro</h4>
+        <p>Descubrir tus patrones, valores, fortalezas y tu propia definición operativa de felicidad.</p>
+      </div>
+      <div class="pilar-card reveal">
+        <div class="pilar-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="2" stroke="#E0574A" stroke-width="1.6"/><path d="M8 14l2.5-3L13 13.5 16 9" stroke="#E0574A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="pilar-word">Project</span>
+        <h4>Transformar el bienestar en un proyecto</h4>
+        <p>Aplicar herramientas de innovación para diseñar hábitos, objetivos y experimentos personales.</p>
+      </div>
+      <div class="pilar-card reveal">
+        <div class="pilar-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 18c4-1 4-5 8-6s4-5 8-6" stroke="#4F6E54" stroke-width="1.6" stroke-linecap="round"/><circle cx="20" cy="6" r="1.6" fill="#4F6E54"/></svg></div>
+        <span class="pilar-word">Path</span>
+        <h4>Iterar continuamente</h4>
+        <p>Prototipar, aprender, ajustar — construir una vida mejor semana tras semana.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="empresas">
+  <div class="wrap">
+    <div class="empresas-grid">
+      <div class="section-head reveal" style="margin-bottom:0;">
+        <span class="eyebrow">para empresas</span>
+        <h2>El bienestar también es una estrategia de negocio.</h2>
+        <p>Diversas investigaciones muestran que equipos con mayores niveles de bienestar suelen presentar mejores indicadores de creatividad, compromiso, colaboración y desempeño. La magnitud del efecto depende del contexto y de cómo se mida, pero la tendencia es consistente: el bienestar favorece el rendimiento organizacional.</p>
+        <p>En H3P ayudamos a las organizaciones a convertir ese conocimiento en acciones concretas mediante laboratorios, workshops y programas de transformación.</p>
+      </div>
+      <div class="empresas-photo reveal">
+        <img src="assets/team2-laboratorio.png" alt="Equipo trabajando y colaborando con bienestar">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="como-trabajamos">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">cómo trabajamos</span>
+      <h2>Nuestro proceso combina reflexión y ejecución.</h2>
+      <p>No creemos en motivar personas durante un fin de semana. Creemos en construir sistemas. Cada participante desarrolla:</p>
+    </div>
+    <div class="checklist-grid reveal">
+      <div class="checklist-item"><span class="check"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Su definición operativa de felicidad</div>
+      <div class="checklist-item"><span class="check"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Experimentos personales</div>
+      <div class="checklist-item"><span class="check"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Happiness Sprints</div>
+      <div class="checklist-item"><span class="check"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Prototipos de comportamiento</div>
+      <div class="checklist-item"><span class="check"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Planes de acción</div>
+      <div class="checklist-item"><span class="check"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Retrospectivas</div>
+      <div class="checklist-item"><span class="check"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Métricas de progreso</div>
+    </div>
+    <span class="como-foot reveal">porque medir permite mejorar</span>
+  </div>
+</section>
+
+<section id="para-quien">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">para quién es</span>
+      <h2>H3P está diseñado para tres tipos de personas.</h2>
+    </div>
+    <div class="audience-grid">
+      <div class="audience-card reveal">
+        <div class="audience-icon"><img src="assets/happy-woman.png" alt="Profesional"></div>
+        <h3>Profesionales</h3>
+        <p>Que sienten agotamiento o desconexión y quieren recuperar dirección.</p>
+      </div>
+      <div class="audience-card reveal">
+        <div class="audience-icon"><img src="assets/family-laboratorio.png" alt="Equipo de empresa"></div>
+        <h3>Empresas</h3>
+        <p>Que quieren desarrollar culturas más saludables, creativas e innovadoras.</p>
+      </div>
+      <div class="audience-card reveal">
+        <div class="audience-icon"></div>
+        <h3>Coaches y consultores</h3>
+        <p>Que desean incorporar herramientas basadas en evidencia a sus procesos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="fundador">
+  <div class="wrap">
+    <div class="decor-photo decor-mid-l"><img src="assets/happy-ronald.png" alt=""></div>
+    <div class="section-head reveal">
+      <span class="eyebrow">el fundador</span>
+      <h2>Una metodología construida desde la experiencia real.</h2>
+    </div>
+    <div class="founder-card reveal">
+      <div class="founder-avatar">RB</div>
+      <div>
+        <span class="role">Fundador de H3P</span>
+        <h3>Ronald Beltrán</h3>
+        <ul class="founder-credentials">
+          <li>Master in Innovation Management</li>
+          <li>Harvard Certified in Happiness Studies</li>
+          <li>Especialista en Design Thinking, Agile y SAFe</li>
+        </ul>
+        <p class="bio">Durante más de una década ha acompañado organizaciones en América Latina en procesos de innovación, transformación digital y desarrollo de talento. Hoy integra esa experiencia con la Ciencia de la Felicidad para ayudar a personas y empresas a construir bienestar de forma práctica y medible.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="vision">
+  <div class="wrap">
+    <div class="decor-photo decor-tr"><img src="assets/team-session.png" alt=""></div>
+    <div class="feature-block reveal">
+      <span class="eyebrow">nuestra visión</span>
+      <h2>Imaginamos organizaciones donde el bienestar sea parte del sistema.</h2>
+      <p>Nuestra visión es formar una red internacional de facilitadores capaces de implementar Laboratorios de Felicidad dentro de empresas, universidades y comunidades. Porque creemos que el bienestar también puede escalar.</p>
+    </div>
+  </div>
+</section>
+
+<section id="journey">
+  <div class="wrap">
+    <div class="decor-photo decor-tl"><img src="assets/family-laboratorio.png" alt=""></div>
+    <div class="decor-photo decor-bl"><img src="assets/happy-woman.png" alt=""></div>
+    <div class="section-head reveal">
+      <span class="eyebrow">tu camino en H3P</span>
+      <h2>H3P Journey</h2>
+      <p>Cinco niveles, del primer descubrimiento a la transformación organizacional completa.</p>
+    </div>
+
+    <div class="ladder-track">
+      <div class="ladder-line"></div>
+
+      <div class="ladder-level reveal">
+        <div class="ladder-marker">1</div>
+        <div class="ladder-card">
+          <div class="ladder-head">
+            <div>
+              <span class="ladder-kicker">Nivel 1 — Descubre</span>
+              <h3>Workshop gratuito</h3>
+            </div>
+            <span class="ladder-price">Gratis</span>
+          </div>
+          <p class="ladder-meta">Objetivo: que la persona entienda que la felicidad puede diseñarse.</p>
+          <ul class="ladder-includes">
+            <li>Workshop de 90 minutos</li>
+            <li>Diagnóstico inicial</li>
+            <li>Introducción a los cuatro pilares</li>
+            <li>Mini ejercicio práctico</li>
+            <li>Invitación al programa completo</li>
+          </ul>
+          <a href="#contacto" class="btn btn-ghost ladder-cta">Reservar mi lugar gratis</a>
+        </div>
+      </div>
+
+      <div class="ladder-level popular reveal">
+        <span class="popular-badge">Más elegido</span>
+        <div class="ladder-marker">2</div>
+        <div class="ladder-card">
+          <div class="ladder-head">
+            <div>
+              <span class="ladder-kicker">Nivel 2 — Diseña</span>
+              <h3>H3P Foundations</h3>
+            </div>
+            <span class="ladder-price">$497 USD</span>
+          </div>
+          <p class="ladder-meta">12 sesiones · precio de lanzamiento</p>
+          <p class="ladder-intro">Aquí la persona construye su sistema personal.</p>
+          <ul class="ladder-includes">
+            <li>Las 12 sesiones en vivo</li>
+            <li>Workbook</li>
+            <li>Happiness Sprints</li>
+            <li>Junta de Accionistas</li>
+            <li>Plantillas</li>
+            <li>Comunidad</li>
+            <li>Certificado</li>
+          </ul>
+          <span class="ladder-result">Resultado: dejar de vivir en automático</span>
+          <br><a href="#contacto" class="btn btn-primary ladder-cta cta-pulse">Empezar H3P Foundations</a>
+        </div>
+      </div>
+
+      <div class="ladder-level reveal">
+        <div class="ladder-marker">3</div>
+        <div class="ladder-card">
+          <div class="ladder-head">
+            <div>
+              <span class="ladder-kicker">Nivel 3 — Implementa</span>
+              <h3>H3P Coaching Lab</h3>
+            </div>
+            <span class="ladder-price">12 semanas</span>
+          </div>
+          <p class="ladder-meta">Formato: grupos pequeños</p>
+          <p class="ladder-intro">Aquí el participante implementa realmente su proyecto.</p>
+          <ul class="ladder-includes">
+            <li>Seguimiento</li>
+            <li>Accountability</li>
+            <li>Revisión semanal</li>
+            <li>Mentorías grupales</li>
+            <li>Revisión de prototipos</li>
+            <li>Pivotes</li>
+          </ul>
+          <span class="ladder-result">Resultado: convertir conocimiento en hábitos</span>
+          <br><a href="#contacto" class="btn btn-ghost ladder-cta">Aplicar al Coaching Lab</a>
+        </div>
+      </div>
+
+      <div class="ladder-level reveal">
+        <div class="ladder-marker">4</div>
+        <div class="ladder-card">
+          <div class="ladder-head">
+            <div>
+              <span class="ladder-kicker">Nivel 4 — Lidera</span>
+              <h3>H3P Professional</h3>
+            </div>
+            <span class="ladder-price">Certificación</span>
+          </div>
+          <p class="ladder-meta">Para coaches, consultores y líderes</p>
+          <p class="ladder-intro">Aprenden a utilizar la metodología H3P con otras personas.</p>
+          <ul class="ladder-includes">
+            <li>Manual metodológico</li>
+            <li>Casos</li>
+            <li>Certificación</li>
+            <li>Observación</li>
+            <li>Prácticas</li>
+          </ul>
+          <span class="ladder-result">Resultado: facilitador certificado</span>
+          <br><a href="#contacto" class="btn btn-ghost ladder-cta">Postular a H3P Professional</a>
+        </div>
+      </div>
+
+      <div class="ladder-level tier-5 reveal">
+        <div class="ladder-marker">5</div>
+        <div class="ladder-card">
+          <div class="ladder-head">
+            <div>
+              <span class="ladder-kicker">Nivel 5 — Organizaciones</span>
+              <h3>Happiness Labs</h3>
+            </div>
+          </div>
+          <p class="ladder-intro">Aquí ya no vendes sesiones. Vendes transformación organizacional.</p>
+          <ul class="ladder-includes">
+            <li>Diagnóstico</li>
+            <li>Workshops</li>
+            <li>Laboratorios</li>
+            <li>Programas para líderes</li>
+            <li>Cultura</li>
+            <li>Innovación</li>
+            <li>Wellbeing</li>
+          </ul>
+          <a href="#contacto" class="btn btn-primary ladder-cta" style="background:var(--cream); color:var(--sage-deep);">Hablar sobre mi organización</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contacto">
+  <div class="wrap">
+    <div class="decor-photo decor-mid-r"><img src="assets/persona_realizada.png" alt=""></div>
+    <div class="cta-banner reveal">
+      <span class="eyebrow">tu vida es tu proyecto más importante</span>
+      <h2>La pregunta no es si puedes cambiar.</h2>
+      <p class="question">La pregunta es: ¿qué pasaría si empezaras a diseñar conscientemente la vida que quieres construir?</p>
+      <div class="cta-actions">
+        <a href="#" class="btn btn-primary cta-pulse">Agenda una llamada</a>
+        <a href="#propuesta" class="btn btn-ghost">Descubre H3P</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="logo"><span class="logo-dot"></span> h<span class="digit">3</span>p</div>
+        <p style="max-width: 30ch; color: var(--ink-soft); margin-top:0.8rem; font-size:0.9rem;">Happiness Personal Project Path — ciencia de la felicidad aplicada a personas y organizaciones.</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>Navegación</h4>
+          <a href="#problema">El problema</a>
+          <a href="#pilares">Pilares</a>
+          <a href="#journey">Journey</a>
+          <a href="#fundador">Fundador</a>
+        </div>
+        <div class="footer-col">
+          <h4>Contacto</h4>
+          <a href="mailto:hola@h3p.co">hola@h3p.co</a>
+          <a href="tel:+50000000000">+591 000 000</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 h3p. Todos los derechos reservados.</span>
+      <span>La Paz, Bolivia</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('mainNav');
+  const root = document.documentElement;
+
+  function updateScrollProgress(){
+    const scrollTop = window.scrollY || window.pageYOffset;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    root.style.setProperty('--scroll-progress', `${Math.min(progress, 100)}%`);
+  }
+
+  window.addEventListener('scroll', () => {
+    if(window.scrollY > 40){ nav.classList.add('scrolled'); }
+    else{ nav.classList.remove('scrolled'); }
+    updateScrollProgress();
+  });
+  updateScrollProgress();
+
+  // Mobile menu toggle
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  const navScrim = document.getElementById('navScrim');
+  let closeMenuTimer;
+
+  function forceCloseMenu(){
+    navToggle.classList.remove('open');
+    navLinks.classList.remove('open', 'closing');
+    navScrim.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', 'false');
+  }
+
+  function closeMenu(immediate = false){
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const shouldAnimate = window.innerWidth <= 900 && !reducedMotion;
+
+    if(!navLinks.classList.contains('open') && !navLinks.classList.contains('closing')){
+      return;
+    }
+
+    clearTimeout(closeMenuTimer);
+
+    if(immediate || !shouldAnimate){
+      forceCloseMenu();
+      return;
+    }
+
+    navToggle.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', 'false');
+    navScrim.classList.remove('open');
+    navLinks.classList.add('closing');
+
+    closeMenuTimer = setTimeout(() => {
+      navLinks.classList.remove('open', 'closing');
+    }, 230);
+  }
+
+  function toggleMenu(){
+    if(navLinks.classList.contains('open')){
+      closeMenu();
+      return;
+    }
+
+    clearTimeout(closeMenuTimer);
+    navLinks.classList.remove('closing');
+    navLinks.classList.add('open');
+    navToggle.classList.add('open');
+    navScrim.classList.add('open');
+    navToggle.setAttribute('aria-expanded', 'true');
+  }
+  navToggle.addEventListener('click', toggleMenu);
+  navScrim.addEventListener('click', closeMenu);
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+  window.addEventListener('resize', () => {
+    if(window.innerWidth > 900){
+      closeMenu(true);
+    }
+  });
+  window.addEventListener('keydown', (event) => {
+    if(event.key === 'Escape'){
+      closeMenu();
+    }
+  });
+
+  // Scroll-triggered reveal animations
+  const revealEls = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add('in-view');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+    revealEls.forEach(el => io.observe(el));
+  } else {
+    revealEls.forEach(el => el.classList.add('in-view'));
+  }
+
+  const heroVideo = document.getElementById('heroVideo');
+  const heroVideoPlay = document.getElementById('heroVideoPlay');
+  const hero = document.querySelector('header.hero');
+  const sections = document.querySelectorAll('section');
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if(hero && !prefersReducedMotion && window.innerWidth > 900){
+    hero.addEventListener('mousemove', (event) => {
+      const rect = hero.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
+      root.style.setProperty('--parallax-x', `${x * 14}px`);
+      root.style.setProperty('--parallax-y', `${y * 14}px`);
+    });
+
+    hero.addEventListener('mouseleave', () => {
+      root.style.setProperty('--parallax-x', '0px');
+      root.style.setProperty('--parallax-y', '0px');
+    });
+  }
+
+  if(!prefersReducedMotion && 'IntersectionObserver' in window){
+    const sectionIO = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add('section-active');
+        } else {
+          entry.target.classList.remove('section-active');
+        }
+      });
+    }, { threshold: 0.25, rootMargin: '-15% 0px -15% 0px' });
+
+    sections.forEach(section => sectionIO.observe(section));
+  } else {
+    sections.forEach(section => section.classList.add('section-active'));
+  }
+
+  function playVideo() {
+    heroVideo.play();
+    heroVideoPlay.style.display = 'none';
+  }
+
+  heroVideoPlay.addEventListener('click', playVideo);
+
+  heroVideo.addEventListener('pause', () => {
+    heroVideoPlay.style.display = 'flex';
+  });
+
+  heroVideo.addEventListener('ended', () => {
+    heroVideoPlay.style.display = 'flex';
+  });
+</script>
+
+</body>
+</html>
