@@ -356,6 +356,9 @@
   #diferentes .decor-photo.decor-mid-r{ right: -62px; width: 132px; }
   /* Founder photo next to the bio text, made larger */
   #fundador .decor-photo.decor-mid-l{ left: -122px; width: 138px; }
+  /* Contact section: left photo aligned to the top of the CTA box, right photo aligned to the bottom */
+  #contacto .decor-photo.decor-mid-l{ top: 0; bottom: auto; transform: rotate(-5deg); }
+  #contacto .decor-photo.decor-mid-r{ top: auto; bottom: 0; transform: rotate(5deg); }
 
   @media (min-width: 1700px){
     .decor-photo.decor-tl, .decor-photo.decor-tr{ width: 132px; }
@@ -1163,7 +1166,6 @@
     </div>
     <div class="footer-bottom">
       <span>© 2026 h3p. Todos los derechos reservados.</span>
-      <span>La Paz, Bolivia</span>
     </div>
   </div>
 </footer>
